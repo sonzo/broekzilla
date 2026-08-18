@@ -18,7 +18,8 @@ Greenfield — no code written yet. This file is the spec to build against.
 - No backend, no server, no database. Everything runs client-side in the browser.
 - No other external dependencies/CDNs unless explicitly requested — keep it self-contained so it works offline.
 - Must be fully usable on both phone (touch, small screen) and PC (mouse/keyboard, larger screen) — responsive layout, touch-friendly tap targets, no hover-only interactions.
-- Follow HTML/JS best practices: semantic HTML elements (`<main>`, `<fieldset>`, `<label>`, etc.) over generic `<div>` soup, proper `<label for>`/form associations for inputs, `const`/`let` (no `var`), strict equality, event listeners over inline `on*` attributes, and JS split into logical modules (e.g. via `<script type="module">`) rather than one large inline script.
+- Follow HTML/JS best practices: semantic HTML elements (`<main>`, `<fieldset>`, `<label>`, etc.) over generic `<div>` soup, proper `<label for>`/form associations for inputs, `const`/`let` (no `var`), strict equality, event listeners over inline `on*` attributes, and JS split into logical files loaded in dependency order rather than one large inline script.
+- Do **not** use ES modules (`<script type="module">` / `import`/`export`). Browsers block module `import` under CORS when a page is opened directly as a `file://` path (no server), which is exactly how this app is meant to be opened (double-click `index.html`, or open it from local storage on a phone). Use plain classic `<script>` tags that share the global scope instead.
 
 ## Core features
 

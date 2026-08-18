@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brøkzilla</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>"
+    />
+    <link rel="stylesheet" href="vendor/pico.min.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="container">
+      <hgroup>
+        <h1>Brøkzilla</h1>
+        <p>Træn brøkregning</p>
+      </hgroup>
+    </header>
+
+    <main class="container">
+      <section id="options-screen">
+        <h2>Vælg opgavetyper</h2>
+        <form id="options-form">
+          <label>
+            <input type="checkbox" id="select-all" />
+            <strong>Vælg alle</strong>
+          </label>
+          <div id="type-checkboxes"></div>
+          <button type="submit">Start træning</button>
+          <p id="options-error" class="error" hidden>Vælg mindst én opgavetype.</p>
+        </form>
+      </section>
+
+      <section id="assignment-screen" hidden>
+        <article>
+          <p id="problem-prompt"></p>
+          <form id="answer-form">
+            <div id="answer-inputs"></div>
+            <button type="submit" id="submit-btn">Svar</button>
+          </form>
+          <p id="feedback" aria-live="polite"></p>
+          <button id="next-btn" hidden>Næste opgave</button>
+        </article>
+        <button id="back-btn" class="secondary">Skift opgavetyper</button>
+      </section>
+
+      <section id="score-panel">
+        <h2>Statistik</h2>
+        <div class="grid">
+          <div>
+            <h3>Denne session</h3>
+            <table id="session-table">
+              <thead>
+                <tr>
+                  <th scope="col">Type</th>
+                  <th scope="col">Rigtige</th>
+                  <th scope="col">Forkerte</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div>
+            <h3>Samlet (gemt på enheden)</h3>
+            <table id="overall-table">
+              <thead>
+                <tr>
+                  <th scope="col">Type</th>
+                  <th scope="col">Rigtige</th>
+                  <th scope="col">Forkerte</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <button id="reset-overall-btn" class="secondary outline">
+              Nulstil samlet statistik
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/fractions.js"></script>
+    <script src="js/generators.js"></script>
+    <script src="js/score.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

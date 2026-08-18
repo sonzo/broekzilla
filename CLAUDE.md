@@ -4,7 +4,11 @@ A small, single-page web app that helps kids practice fraction ("brøk") math.
 
 ## Project status
 
-Greenfield — no code written yet. This file is the spec to build against.
+Implemented: `index.html`, `style.css`, and `js/` (fractions.js, generators.js, score.js, app.js).
+
+## Deployment
+
+The site's live URL is `https://broekzilla.notation.dk/`. This exact URL is baked into several SEO-related files — `index.html` (canonical link, Open Graph/Twitter meta, JSON-LD), `robots.txt`, and `sitemap.xml`. If the domain ever changes, update it in all of those places.
 
 ## Language
 

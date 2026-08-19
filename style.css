@@ -49,6 +49,8 @@ header.container .logo {
 #type-checkboxes .start-training-item {
   position: sticky;
   bottom: 0;
+  display: flex;
+  gap: 0.5rem;
   margin-top: 0.35rem;
   padding-top: 0.5rem;
   background-color: var(--pico-dropdown-background-color, var(--pico-background-color));
@@ -56,6 +58,7 @@ header.container .logo {
 }
 
 #type-checkboxes .start-training-item button {
+  flex: 1 1 50%;
   margin: 0;
 }
 
@@ -222,4 +225,63 @@ table th:first-child {
   text-align: center;
   font-size: 1.15rem;
   margin-bottom: 1rem;
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  body > header,
+  body > main {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+    color: #000;
+    background: #fff;
+  }
+
+  .print-only .worksheet-name-line {
+    margin-bottom: 1.5rem;
+  }
+
+  .worksheet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: column;
+    grid-template-rows: repeat(var(--worksheet-rows, 8), auto);
+    gap: 1.2rem 1.5rem;
+  }
+
+  .worksheet-problem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    font-size: 0.8rem;
+    break-inside: avoid;
+  }
+
+  .worksheet-question-line {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  .worksheet-problem-number {
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .worksheet-answer-line {
+    height: 1.1em;
+    margin-left: 1.3rem;
+    border-bottom: 1px solid #000;
+  }
 }

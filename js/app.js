@@ -18,6 +18,10 @@ const statsScreen = document.getElementById('stats-screen');
 const statsBtn = document.getElementById('stats-btn');
 const assignmentStatsBtn = document.getElementById('assignment-stats-btn');
 const sessionLiveTotals = document.getElementById('session-live-totals');
+const printArea = document.getElementById('print-area');
+
+const PRINT_COLUMNS = 2;
+const PRINT_ROWS_PER_COLUMN = 10;
 
 let selectedTypes = [];
 let currentProblem = null;
@@ -62,10 +66,18 @@ function renderTypeCheckboxes() {
 
   const startLi = document.createElement('li');
   startLi.className = 'start-training-item';
+
   const startButton = document.createElement('button');
   startButton.type = 'submit';
   startButton.textContent = 'Start træning';
-  startLi.appendChild(startButton);
+
+  const printButton = document.createElement('button');
+  printButton.type = 'button';
+  printButton.className = 'secondary';
+  printButton.textContent = 'Udskriv';
+  printButton.addEventListener('click', printWorksheet);
+
+  startLi.append(startButton, printButton);
   typeCheckboxes.appendChild(startLi);
 
   updateDropdownSummary();
@@ -89,6 +101,55 @@ function updateDropdownSummary() {
   } else {
     typeDropdownSummary.textContent = `${checkedCount} opgavetyper valgt`;
   }
+}
+
+function printWorksheet() {
+  const checked = typeBoxes().filter((box) => box.checked);
+  if (checked.length === 0) {
+    optionsError.hidden = false;
+    return;
+  }
+  optionsError.hidden = true;
+  const types = checked.map((box) => box.value);
+
+  printArea.innerHTML = '';
+
+  const heading = document.createElement('h2');
+  heading.textContent = 'Brøkzilla – Opgaver';
+  const nameLine = document.createElement('p');
+  nameLine.className = 'worksheet-name-line';
+  nameLine.textContent = 'Navn: _____________________  Dato: _____________';
+  printArea.append(heading, nameLine);
+
+  const grid = document.createElement('div');
+  grid.className = 'worksheet-grid';
+  grid.style.setProperty('--worksheet-rows', PRINT_ROWS_PER_COLUMN);
+  const total = PRINT_COLUMNS * PRINT_ROWS_PER_COLUMN;
+  for (let i = 0; i < total; i++) {
+    const typeId = types[Math.floor(Math.random() * types.length)];
+    const problem = generateProblem(typeId);
+
+    const item = document.createElement('div');
+    item.className = 'worksheet-problem';
+
+    const questionLine = document.createElement('div');
+    questionLine.className = 'worksheet-question-line';
+    const number = document.createElement('span');
+    number.className = 'worksheet-problem-number';
+    number.textContent = `${i + 1}.`;
+    const promptSpan = document.createElement('span');
+    appendTextWithFractions(promptSpan, problem.prompt);
+    questionLine.append(number, promptSpan);
+
+    const answerLine = document.createElement('div');
+    answerLine.className = 'worksheet-answer-line';
+
+    item.append(questionLine, answerLine);
+    grid.appendChild(item);
+  }
+  printArea.appendChild(grid);
+
+  window.print();
 }
 
 function buildAnswerInputs(problem) {

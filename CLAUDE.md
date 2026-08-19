@@ -41,7 +41,15 @@ Before starting, the user picks which fraction math rules to practice via a mult
 - Converting between mixed numbers and improper fractions
 - Converting between fractions, decimals, and percentages (e.g. 1/4 → 0,25 → 25%, in a randomly chosen direction between any two of the three forms)
 
-If **all** checkboxes are checked, assignments are drawn from **all** types, mixed together (not run as separate blocks per type). If only some are checked, only those types are used. At least one type must be selected to start. The dropdown's summary label reflects the current selection (e.g. "3 opgavetyper valgt" / "Alle opgavetyper valgt"). The "Start træning" button lives *inside* the dropdown itself (the last row, pinned to the bottom of the scrollable list) rather than below it, so the kid can tick types and start training without first having to close the dropdown to reach the button.
+If **all** checkboxes are checked, assignments are drawn from **all** types, mixed together (not run as separate blocks per type). If only some are checked, only those types are used. At least one type must be selected to start. The dropdown's summary label reflects the current selection (e.g. "3 opgavetyper valgt" / "Alle opgavetyper valgt"). The last row of the dropdown, pinned to the bottom of the scrollable list, holds two side-by-side buttons, each half the row's width: "Start træning" (starts the on-screen training as before) and "Udskriv" (see below) — both live inside the dropdown itself rather than below it, so the kid can tick types and act without first having to close the dropdown.
+
+#### Printable worksheet
+
+"Udskriv" builds a printable A4 worksheet from the currently selected assignment types (same validation as "Start træning": at least one type must be checked) and triggers the browser's native print dialog (`window.print()`) — no PDF-generation library is involved (that would violate the no-external-dependencies rule) and none is needed: printing straight from the browser already lets the kid/parent print on paper or save as PDF via the browser's own print dialog, whichever they pick there. This is driven entirely by a `@media print` stylesheet.
+
+- The page shows a heading, a blank "Navn: ___ Dato: ___" line, then a grid of generated problems — 2 columns, 10 rows (20 problems total; tunable via `PRINT_COLUMNS`/`PRINT_ROWS_PER_COLUMN` in `app.js`) — numbered and filled column-by-column (top-to-bottom, then next column), drawn randomly from the selected types the same way training problems are.
+- Each problem is two lines: the numbered prompt on its own line, then a blank underlined answer line directly below it to write the answer in by hand — not a copy of the on-screen feedback, and no answer or solution steps are printed.
+- The printable content lives in a normally-hidden `#print-area` element (`display: none` outside of print), populated fresh by JS each time "Udskriv" is clicked; the print stylesheet hides the rest of the page (header, main) and forces black-on-white text regardless of the browser's light/dark preference, since a printed page can't rely on `prefers-color-scheme` — printing the OS dark-theme text color would be barely visible on paper.
 
 ### 2. Assignment screen
 

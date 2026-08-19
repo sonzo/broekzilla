@@ -23,7 +23,26 @@ const ASSIGNMENT_TYPES = [
   { id: 'commonDenominator', label: 'Find fælles nævner' },
   { id: 'compare', label: 'Sammenlign brøker' },
   { id: 'mixedConvert', label: 'Blandet tal og uægte brøk' },
+  { id: 'conversion', label: 'Brøk, decimaltal og procent' },
 ];
+
+const CONVERSION_DENOMINATORS = [2, 4, 5, 10, 20, 25, 50, 100];
+const CONVERSION_FORM_NAMES = { fraction: 'brøk', decimal: 'decimaltal', percent: 'procent' };
+
+function formatDecimalDanish(value) {
+  return value
+    .toFixed(2)
+    .replace(/0+$/, '')
+    .replace(/\.$/, '')
+    .replace('.', ',');
+}
+
+function randomConversionForm(exclude) {
+  const forms = ['fraction', 'decimal', 'percent'];
+  let form = forms[randInt(0, forms.length - 1)];
+  while (form === exclude) form = forms[randInt(0, forms.length - 1)];
+  return form;
+}
 
 const GENERATORS = {
   add: () => {
@@ -144,6 +163,50 @@ const GENERATORS = {
           { num: userAnswer.num, den: userAnswer.den },
           { num: correct.num, den: correct.den }
         ),
+    };
+  },
+  conversion: () => {
+    const den = CONVERSION_DENOMINATORS[randInt(0, CONVERSION_DENOMINATORS.length - 1)];
+    const num = randInt(1, den - 1);
+    const decimal = num / den;
+    const percent = Math.round(decimal * 100);
+
+    const sourceType = randomConversionForm();
+    const targetType = randomConversionForm(sourceType);
+
+    const sourceDisplay =
+      sourceType === 'fraction'
+        ? `brøken ${fractionLabel({ num, den })}`
+        : sourceType === 'decimal'
+          ? `decimaltallet ${formatDecimalDanish(decimal)}`
+          : `${percent}%`;
+
+    const prompt = `Omskriv ${sourceDisplay} til ${CONVERSION_FORM_NAMES[targetType]}.`;
+
+    if (targetType === 'fraction') {
+      return {
+        type: 'conversion',
+        prompt,
+        answerType: 'fraction',
+        correctAnswer: { num, den },
+        checkAnswer: (userAnswer) => fractionsEqual(userAnswer, { num, den }),
+      };
+    }
+    if (targetType === 'decimal') {
+      return {
+        type: 'conversion',
+        prompt,
+        answerType: 'decimal',
+        correctAnswer: decimal,
+        checkAnswer: (userAnswer) => Math.abs(userAnswer - decimal) < 0.005,
+      };
+    }
+    return {
+      type: 'conversion',
+      prompt,
+      answerType: 'percent',
+      correctAnswer: percent,
+      checkAnswer: (userAnswer) => userAnswer === percent,
     };
   },
 };

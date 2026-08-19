@@ -66,6 +66,10 @@ function buildAnswerInputs(problem) {
     row.appendChild(numberField('answer-whole', 'Helt tal', 0));
     row.appendChild(fractionInputGroup('answer-num', 'answer-den'));
     answerInputs.appendChild(row);
+  } else if (problem.answerType === 'decimal') {
+    answerInputs.appendChild(numberField('answer-value', 'Decimaltal', 0, 0.01));
+  } else if (problem.answerType === 'percent') {
+    answerInputs.appendChild(numberField('answer-value', 'Procent', 0, 1));
   } else if (problem.answerType === 'choice') {
     submitBtn.hidden = true;
     const group = document.createElement('div');
@@ -81,10 +85,10 @@ function buildAnswerInputs(problem) {
   }
 }
 
-function numberField(id, labelText, min) {
+function numberField(id, labelText, min, step) {
   const wrapper = document.createElement('div');
   wrapper.className = 'frac-input';
-  wrapper.append(fracLabel(id, labelText), fracNumberInput(id, min));
+  wrapper.append(fracLabel(id, labelText), fracNumberInput(id, min, step));
   return wrapper;
 }
 
@@ -96,14 +100,15 @@ function fracLabel(forId, text) {
   return label;
 }
 
-function fracNumberInput(id, min) {
+function fracNumberInput(id, min, step) {
   const input = document.createElement('input');
   input.type = 'number';
   input.id = id;
   input.name = id;
   input.required = true;
   input.min = String(min);
-  input.inputMode = 'numeric';
+  input.inputMode = step && step < 1 ? 'decimal' : 'numeric';
+  if (step) input.step = String(step);
   return input;
 }
 
@@ -184,6 +189,9 @@ function readAnswer(problem) {
       den: Number(document.getElementById('answer-den').value),
     };
   }
+  if (problem.answerType === 'decimal' || problem.answerType === 'percent') {
+    return Number(document.getElementById('answer-value').value);
+  }
   return null;
 }
 
@@ -193,6 +201,8 @@ function formatCorrectAnswer(problem) {
   if (problem.answerType === 'commonDenominator')
     return `${a.numA}/${a.den} og ${a.numB}/${a.den}`;
   if (problem.answerType === 'mixed') return `${a.whole} ${a.num}/${a.den}`;
+  if (problem.answerType === 'decimal') return formatDecimalDanish(a);
+  if (problem.answerType === 'percent') return `${a}%`;
   return String(a);
 }
 
@@ -214,6 +224,7 @@ function submitAnswer(choiceValue) {
     if (Object.values(userAnswer).some((v) => Number.isNaN(v))) return;
     if ('den' in userAnswer && userAnswer.den === 0) return;
   }
+  if (typeof userAnswer === 'number' && Number.isNaN(userAnswer)) return;
 
   const wasCorrect = currentProblem.checkAnswer(userAnswer);
   scoreTracker.record(currentProblem.type, wasCorrect);

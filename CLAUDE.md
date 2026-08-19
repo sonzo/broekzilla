@@ -39,6 +39,7 @@ Before starting, the user picks which fraction math rules to practice via checkb
 - Finding a common denominator
 - Comparing two fractions (<, >, =)
 - Converting between mixed numbers and improper fractions
+- Converting between fractions, decimals, and percentages (e.g. 1/4 → 0,25 → 25%, in a randomly chosen direction between any two of the three forms)
 
 If **all** checkboxes are checked, assignments are drawn from **all** types, mixed together (not run as separate blocks per type). If only some are checked, only those types are used. At least one type must be selected to start.
 
@@ -48,6 +49,7 @@ If **all** checkboxes are checked, assignments are drawn from **all** types, mix
 - Kid enters an answer (e.g. numerator/denominator input fields for fraction answers, or a simple value for comparisons).
 - On submit, give immediate right/wrong feedback, then move to the next generated problem.
 - Numbers generated should be age-appropriate (small denominators/numerators, avoid absurdly large or unsimplifiable results) — keep this tunable rather than hardcoded deep in logic.
+- For the fraction/decimal/percentage conversion type, keep decimals to at most two decimal places and percentages as whole numbers, and only generate fractions that convert cleanly to one of those forms (e.g. denominators like 2, 4, 5, 10, 20, 25, 50, 100) so a kid isn't asked to produce a repeating decimal.
 
 ### 3. Score tracking
 

@@ -29,7 +29,7 @@ The site's live URL is `https://broekzilla.notation.dk/`. This exact URL is bake
 
 ### 1. Options screen
 
-Before starting, the user picks which fraction math rules to practice via checkboxes, one per assignment type. Assignment types (rules):
+Before starting, the user picks which fraction math rules to practice via a multi-select dropdown (a native `<details class="dropdown">`/`<summary>` disclosure with a checkbox per item inside, per Pico CSS's built-in dropdown pattern — not a plain checkbox list, and not a native `<select multiple>`, which is poor on touch), one checkbox per assignment type plus a "select all" checkbox. Assignment types (rules):
 
 - Addition of fractions
 - Subtraction of fractions
@@ -41,15 +41,20 @@ Before starting, the user picks which fraction math rules to practice via checkb
 - Converting between mixed numbers and improper fractions
 - Converting between fractions, decimals, and percentages (e.g. 1/4 → 0,25 → 25%, in a randomly chosen direction between any two of the three forms)
 
-If **all** checkboxes are checked, assignments are drawn from **all** types, mixed together (not run as separate blocks per type). If only some are checked, only those types are used. At least one type must be selected to start.
+If **all** checkboxes are checked, assignments are drawn from **all** types, mixed together (not run as separate blocks per type). If only some are checked, only those types are used. At least one type must be selected to start. The dropdown's summary label reflects the current selection (e.g. "3 opgavetyper valgt" / "Alle opgavetyper valgt"). The "Start træning" button lives *inside* the dropdown itself (the last row, pinned to the bottom of the scrollable list) rather than below it, so the kid can tick types and start training without first having to close the dropdown to reach the button.
 
 ### 2. Assignment screen
 
 - Shows one fraction math problem at a time, generated according to one of the selected rule types.
 - Kid enters an answer (e.g. numerator/denominator input fields for fraction answers, or a simple value for comparisons).
-- On submit, give immediate right/wrong feedback, then move to the next generated problem.
+- On submit, give immediate right/wrong feedback, then move to the next generated problem. The feedback always explains the solution steps (e.g. how a common denominator was found, or how the numerators/denominators were combined) — not just when the answer is wrong, but also when it's right, so the kid keeps seeing how to get there. Each step is shown on its own line.
+- Fraction values are always displayed as real stacked fractions (numerator over denominator, visually), never as plain `num/den` text — this applies everywhere a fraction appears: problem prompts, answer feedback, and solution-step explanations alike.
+- Feedback has a distinct visual structure in both outcomes: a bold title line ("Rigtigt!" in green, or "FORKERT!!!" in red — wrong-answer feedback also gets a line stating the correct answer with the value itself highlighted in green), then the solution-step explanation below in the normal body text color, never colored red or green — only the title (and, for wrong answers, the highlighted correct-answer value) carries color; the explanation always reads as neutral instructional text. Every color used here must stay legible in both light and dark color schemes (this app has no manual theme toggle — it follows the OS/browser's `prefers-color-scheme`, same as Pico CSS's own automatic light/dark theming). Note: Pico CSS sets `color` explicitly on `<p>` (among other elements), which defeats simple color inheritance — color rules for feedback text must target `.feedback-title`/`.feedback-explain` directly rather than relying on inheriting from a parent's color.
 - Numbers generated should be age-appropriate (small denominators/numerators, avoid absurdly large or unsimplifiable results) — keep this tunable rather than hardcoded deep in logic.
 - For the fraction/decimal/percentage conversion type, keep decimals to at most two decimal places and percentages as whole numbers, and only generate fractions that convert cleanly to one of those forms (e.g. denominators like 2, 4, 5, 10, 20, 25, 50, 100) so a kid isn't asked to produce a repeating decimal.
+- The running total for this session (correct/wrong count, summed across all types) is shown live on the assignment screen itself, updating after every answer, so the kid doesn't have to leave training to see how they're doing.
+- The header's "Statistik" button is hidden while training is in progress (it would otherwise sit right above the problem, competing for attention). A second "Statistik" button lives at the bottom of the assignment screen instead, alongside "Skift opgavetyper", so stats are still reachable without cluttering the top of the screen.
+- "Skift opgavetyper" doesn't just return to the options screen — it clears every checked assignment type (including "select all") and re-opens the type dropdown, so the kid lands straight in a fresh, empty selection ready to pick new types, rather than having to first notice and clear out the old ones.
 
 ### 3. Score tracking
 
@@ -58,6 +63,9 @@ If **all** checkboxes are checked, assignments are drawn from **all** types, mix
   - **This session**: resets to zero each time the page/session starts fresh; lives in memory only.
   - **Overall**: cumulative across all sessions, persisted in `localStorage` so it survives page reloads and browser restarts.
 - Both scopes are broken down per assignment type, not just an aggregate.
+- For each scope, the summed correct/wrong totals (across all types) are shown in their own small table, visually distinct from — and with noticeably larger numbers than — the per-type breakdown table below it, so the headline numbers are the first thing that stands out.
+- Every correct/wrong number shown anywhere in the stats (both the totals tables and the per-type breakdown) is colored green for correct and red for wrong, using the same color scheme as the rest of the site (the same `--pico-ins-color`/`--pico-del-color` pair the assignment feedback uses), so the color meaning stays consistent across the whole app.
+- The statistics are not a separate screen to navigate to — they expand inline, appearing *below* whichever screen is currently showing (options or assignment), rather than replacing it. A "Statistik" toggle button does this: in the header when on the options screen, and — per the point above — a second copy at the bottom of the assignment screen while training. Clicking it expands the stats section below the current content and relabels the button "Skjul statistik"; clicking again collapses it back. Switching between the options and assignment screens (starting training, or "Skift opgavetyper") collapses stats automatically, so it doesn't linger stale across an unrelated screen change. While expanded, the header button goes full-width so it reads as an obvious, prominent way to collapse it again.
 
 ## Conventions for this codebase
 

@@ -66,40 +66,55 @@
       <h1 class="sr-only">Brøkzilla</h1>
       <img src="broekzilla.png" alt="Brøkzilla – dinosaur der hjælper børn med at træne brøkregning" class="logo" />
       <p>Træn brøkregning: plus, minus, gange, division, forkortning, fælles nævner og mere.</p>
+      <button type="button" id="stats-btn" class="outline secondary">Statistik</button>
     </header>
 
     <main class="container">
       <section id="options-screen">
         <h2>Vælg opgavetyper</h2>
         <form id="options-form">
-          <label>
-            <input type="checkbox" id="select-all" />
-            <strong>Vælg alle</strong>
-          </label>
-          <div id="type-checkboxes"></div>
-          <button type="submit">Start træning</button>
+          <details class="dropdown" id="type-dropdown">
+            <summary id="type-dropdown-summary">Vælg opgavetyper</summary>
+            <ul id="type-checkboxes"></ul>
+          </details>
           <p id="options-error" class="error" hidden>Vælg mindst én opgavetype.</p>
         </form>
       </section>
 
       <section id="assignment-screen" hidden>
+        <p id="session-live-totals"></p>
         <article>
           <p id="problem-prompt"></p>
           <form id="answer-form">
             <div id="answer-inputs"></div>
             <button type="submit" id="submit-btn">Svar</button>
           </form>
-          <p id="feedback" aria-live="polite"></p>
+          <div id="feedback" aria-live="polite"></div>
           <button id="next-btn" hidden>Næste opgave</button>
         </article>
         <button id="back-btn" class="secondary">Skift opgavetyper</button>
+        <button type="button" id="assignment-stats-btn" class="secondary outline">Statistik</button>
       </section>
 
-      <section id="score-panel">
+      <section id="stats-screen" hidden>
         <h2>Statistik</h2>
         <div class="grid">
           <div>
             <h3>Denne session</h3>
+            <table id="session-totals-table" class="totals-table">
+              <thead>
+                <tr>
+                  <th scope="col">Rigtige</th>
+                  <th scope="col">Forkerte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="session-total-correct" class="correct-count">0</td>
+                  <td id="session-total-wrong" class="wrong-count">0</td>
+                </tr>
+              </tbody>
+            </table>
             <table id="session-table">
               <thead>
                 <tr>
@@ -113,6 +128,20 @@
           </div>
           <div>
             <h3>Samlet (gemt på enheden)</h3>
+            <table id="overall-totals-table" class="totals-table">
+              <thead>
+                <tr>
+                  <th scope="col">Rigtige</th>
+                  <th scope="col">Forkerte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="overall-total-correct" class="correct-count">0</td>
+                  <td id="overall-total-wrong" class="wrong-count">0</td>
+                </tr>
+              </tbody>
+            </table>
             <table id="overall-table">
               <thead>
                 <tr>

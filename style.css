@@ -20,6 +20,56 @@ header.container .logo {
   width: 180px;
 }
 
+#stats-btn {
+  width: auto;
+  display: inline-block;
+  margin: 0.75rem auto 0;
+}
+
+#stats-btn.wide {
+  width: 100%;
+  display: block;
+}
+
+#stats-screen {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: var(--pico-border-width) solid var(--pico-muted-border-color);
+}
+
+#type-dropdown {
+  margin-bottom: 1rem;
+}
+
+#type-dropdown > summary + ul {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+#type-checkboxes .start-training-item {
+  position: sticky;
+  bottom: 0;
+  margin-top: 0.35rem;
+  padding-top: 0.5rem;
+  background-color: var(--pico-dropdown-background-color, var(--pico-background-color));
+  border-top: var(--pico-border-width) solid var(--pico-dropdown-border-color, var(--pico-muted-border-color));
+}
+
+#type-checkboxes .start-training-item button {
+  margin: 0;
+}
+
+#type-checkboxes li label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+#assignment-screen article > button {
+  margin-top: 1rem;
+}
+
 #assignment-screen article p#problem-prompt {
   font-size: 1.5rem;
   font-weight: bold;
@@ -104,13 +154,34 @@ header.container .logo {
   min-width: 4rem;
 }
 
-#feedback.correct {
-  color: var(--pico-ins-color, green);
-  font-weight: bold;
+#feedback .feedback-line {
+  margin: 0 0 0.35em;
 }
 
-#feedback.wrong {
+#feedback .feedback-line:last-child {
+  margin-bottom: 0;
+}
+
+#feedback .feedback-title {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#feedback.correct .feedback-title {
+  color: var(--pico-ins-color, green);
+}
+
+#feedback.wrong .feedback-title {
   color: var(--pico-del-color, crimson);
+}
+
+#feedback .feedback-explain {
+  color: var(--pico-color);
+  font-weight: normal;
+}
+
+#feedback .answer-value {
+  color: var(--pico-ins-color, green);
   font-weight: bold;
 }
 
@@ -126,4 +197,29 @@ table th {
 table td:first-child,
 table th:first-child {
   text-align: left;
+}
+
+.correct-count {
+  color: var(--pico-ins-color, green);
+  font-weight: bold;
+}
+
+.wrong-count {
+  color: var(--pico-del-color, crimson);
+  font-weight: bold;
+}
+
+.totals-table td {
+  font-size: 1.6rem;
+}
+
+.totals-table th:first-child,
+.totals-table td:first-child {
+  text-align: center;
+}
+
+#session-live-totals {
+  text-align: center;
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
 }
